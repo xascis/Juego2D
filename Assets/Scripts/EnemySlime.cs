@@ -3,89 +3,97 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemySlime : MonoBehaviour {
-    public float time;
-    public float distanceX = 1;
+public class EnemySlime : MonoBehaviour
+{
+//    public float time;
+//    public float distanceX = 1;
 
-    private Animator animator;
-    private Rigidbody2D rigidbody2D;
+    public float speed;
+    public LayerMask groundMask;
+    private float myWidth, myHeight;
+    private Transform myTransform;
 
-    public AudioSource enemyDestroyed;
-    public AudioSource characterDamaged;
+    private Animator myAnimator;
+    private Rigidbody2D myBody;
 
-    public float directionX = 0;
+    private AudioSource enemyDestroyed;
+    private AudioSource characterDamaged;
 
-    void Start () {
-        animator = GetComponent<Animator>();
-        rigidbody2D = GetComponent<Rigidbody2D>();
+//    public float directionX = 0;
+
+    void Start()
+    {
+        myAnimator = GetComponent<Animator>();
+        myBody = GetComponent<Rigidbody2D>();
+        myTransform = transform;
+        SpriteRenderer mySpriteRenderer = GetComponent<SpriteRenderer>();
+        myWidth = mySpriteRenderer.bounds.extents.x;
+        myHeight = mySpriteRenderer.bounds.extents.y;
 
         // sonidos para cada situacíon
         var audioSource = GetComponents<AudioSource>();
         enemyDestroyed = audioSource[0];
         characterDamaged = audioSource[1];
-
-        // movimiento del enemigo
-        directionX = gameObject.transform.position.x;
-
-        var destination = new Vector3();
-        destination.Set(gameObject.transform.position.x + distanceX, gameObject.transform.position.y, gameObject.transform.position.z);
-
-        iTween.MoveTo(gameObject, iTween.Hash("position", destination, "time", time, "easetype", "easeInOutSine", "looptype", "pingPong"));
-    }
-	
-	void Update () {
-        
-        // girar la imagen según la dirección
-        directionX = directionX - gameObject.transform.position.x;
-
-        if (directionX < 0)
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
-        }
-        else
-        {
-            transform.localScale = new Vector3(1, 1, 1);
-        }
-
-        directionX = gameObject.transform.position.x;
     }
 
-
-    public void OnTriggerEnter2D(Collider2D collision)
+    void FixedUpdate()
     {
-        // elimina el enemigo si le cae encima
+        Vector2 lineCastPosition = myTransform.position - myTransform.right * myWidth + Vector3.up * myHeight;
+        Debug.DrawLine(lineCastPosition, lineCastPosition + Vector2.down);
+        bool isGrounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down, groundMask);
+        Debug.DrawLine(lineCastPosition,lineCastPosition - toVector2(myTransform.right) * 0.1f);
+        bool isBlocked = Physics2D.Linecast(lineCastPosition, lineCastPosition - toVector2(myTransform.right) * 0.1f, groundMask);
+
+        if (!isGrounded || isBlocked)
+        {
+            Vector3 currentRotation = myTransform.eulerAngles;
+            currentRotation.y += 180;
+            myTransform.eulerAngles = currentRotation;
+        }
+        // Always move foward
+        Vector2 myVelocity = myBody.velocity;
+        myVelocity.x = - myTransform.right.x * speed;
+        myBody.velocity = myVelocity;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // character kills the enemy
         if (collision.gameObject.tag == "Character"
             && Math.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) < 0.3
             && gameObject.transform.position.y - collision.gameObject.transform.position.y < 0)
         {
-            collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 380f);
+            collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 100f);
 
             if (GameManager.musicSettings)
                 enemyDestroyed.Play();
 
             gameObject.GetComponent<Collider2D>().enabled = false;
-            animator.SetBool("Dead", true);
+            myAnimator.SetBool("Dead", true);
             Destroy(gameObject, 1.5f);
         }
 
-        // dañar jugador si toca el enemigo
-        if (collision.gameObject.tag == "Character" 
+        // enemy damages character
+        if (collision.gameObject.tag == "Character"
             && Math.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) >= 0.3)
         {
             if (gameObject.transform.position.x > collision.gameObject.transform.position.x)
             {
-                collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.left * 200f);
+                collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.left * 50f);
             }
             else
             {
-                collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.right * 200f);
+                collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.right * 50f);
             }
 
             if (GameManager.musicSettings)
                 characterDamaged.Play();
             GameManager.currentNumberHearth--;
-
         }
     }
 
+    public Vector2 toVector2(Vector3 vector3)
+    {
+        return new Vector2(vector3.x, vector3.y);
+    }
 }

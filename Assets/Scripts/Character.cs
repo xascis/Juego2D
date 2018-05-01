@@ -1,28 +1,33 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.SceneManagement;
 
-public class Character : MonoBehaviour {
-    public float Speed = 0.0f;
+public class Character : MonoBehaviour
+{
+    public float Speed;
     public float lateralMovement = 2.0f;
     public float jumpMovement = 400.0f;
+    private float myWidth, myHeight;
 
-    public Transform groundCheck;
-
-    private Animator animator;
-    private Rigidbody2D rigidbody2D;
-
-    public bool grounded = true;
+    public Transform myTransform;
+    public LayerMask groundMask;
+    private Animator myAnimator;
+    private Rigidbody2D myBody;
 
     public AudioSource musicJump;
     public AudioSource musicCoin;
     public AudioSource musicKey;
 
     void Start () {
-        animator = GetComponent<Animator>();
-        rigidbody2D = GetComponent<Rigidbody2D>();
+        myAnimator = GetComponent<Animator>();
+        myBody = GetComponent<Rigidbody2D>();
+        myTransform = transform;
+        SpriteRenderer mySpriteRenderer = GetComponent<SpriteRenderer>();
+        myWidth = mySpriteRenderer.bounds.extents.x;
+        myHeight = mySpriteRenderer.bounds.extents.y;
 
         // sonidos para el salto, moneda y llave
         var audioSource = GetComponents<AudioSource>();
@@ -31,15 +36,15 @@ public class Character : MonoBehaviour {
         musicKey = audioSource[2];
 	}
 	
-	void Update () {
-        grounded = Physics2D.Linecast(
-            transform.position,
-            groundCheck.position,
-            1 << LayerMask.NameToLayer("Ground"));
+	void FixedUpdate ()
+	{
+	    Vector2 lineCastPosition = myTransform.position - Vector3.up * myHeight;
+	    Debug.DrawLine(lineCastPosition, lineCastPosition + Vector2.down * 0.1f);
+	    bool isGrounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down * 0.1f, groundMask);
 
-        if (grounded && Input.GetButtonDown("Jump"))
+        if (isGrounded && Input.GetButtonDown("Jump"))
         {
-            rigidbody2D.AddForce(Vector2.up * jumpMovement);
+            myBody.AddForce(Vector2.up * jumpMovement);
 
             // reproduce el audio cuando salta
             if (GameManager.musicSettings)
@@ -50,7 +55,7 @@ public class Character : MonoBehaviour {
 
         Speed = lateralMovement * Input.GetAxis("Horizontal");
         transform.Translate(Vector2.right * Speed * Time.deltaTime);
-        animator.SetFloat("Speed", Mathf.Abs(Speed));
+        myAnimator.SetFloat("Speed", Mathf.Abs(Speed));
 
         if (Speed < 0)
         {
