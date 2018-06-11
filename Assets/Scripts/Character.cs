@@ -36,13 +36,13 @@ public class Character : MonoBehaviour
         musicKey = audioSource[2];
 	}
 	
-	void FixedUpdate ()
+	void Update ()
 	{
 	    Vector2 lineCastPosition = myTransform.position - Vector3.up * myHeight;
 	    Debug.DrawLine(lineCastPosition, lineCastPosition + Vector2.down * 0.1f);
-	    bool isGrounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down * 0.1f, groundMask);
+	    bool Grounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down * 0.1f, groundMask);
 
-        if (isGrounded && Input.GetButtonDown("Jump"))
+        if (Grounded && Input.GetButtonDown("Jump"))
         {
             myBody.AddForce(Vector2.up * jumpMovement);
 
