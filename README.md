@@ -2,4 +2,4 @@
 
 ## Listado de tareas
 
--[ ] Crear el listado de tareas
+- [ ] Crear el listado de tareas
