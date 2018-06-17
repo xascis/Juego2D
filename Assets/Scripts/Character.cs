@@ -12,6 +12,8 @@ public class Character : MonoBehaviour
     public float jumpMovement = 400.0f;
     private float myWidth, myHeight;
 
+    public bool Grounded = true;
+
     public Transform myTransform;
     public LayerMask groundMask;
     private Animator myAnimator;
@@ -40,7 +42,7 @@ public class Character : MonoBehaviour
 	{
 	    Vector2 lineCastPosition = myTransform.position - Vector3.up * myHeight;
 	    Debug.DrawLine(lineCastPosition, lineCastPosition + Vector2.down * 0.1f);
-	    bool Grounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down * 0.1f, groundMask);
+	    Grounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down * 0.1f, groundMask);
 
         if (Grounded && Input.GetButtonDown("Jump"))
         {
@@ -52,6 +54,16 @@ public class Character : MonoBehaviour
                 musicJump.Play();
             }
         }
+
+	    // animación
+	    if (Grounded)
+	    {
+	        myAnimator.SetTrigger("Grounded");
+	    }
+	    else
+	    {
+	        myAnimator.SetTrigger("Jump");
+	    }
 
         Speed = lateralMovement * Input.GetAxis("Horizontal");
         transform.Translate(Vector2.right * Speed * Time.deltaTime);
