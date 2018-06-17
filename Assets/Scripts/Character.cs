@@ -145,6 +145,11 @@ public class Character : MonoBehaviour
     void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.tag == "MobilePlatform") transform.SetParent(other.transform);
+
+        if (other.gameObject.tag == "Enemy")
+        {
+
+        }
     }
     void OnCollisionExit2D(Collision2D other)
     {
