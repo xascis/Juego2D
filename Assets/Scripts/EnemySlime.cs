@@ -17,7 +17,7 @@ public class EnemySlime : MonoBehaviour
     private Rigidbody2D myBody;
 
     private AudioSource enemyDestroyed;
-    private AudioSource characterDamaged;
+    // private AudioSource characterDamaged;
 
 //    public float directionX = 0;
 
@@ -78,22 +78,22 @@ public class EnemySlime : MonoBehaviour
         }
 
         // enemy damages character
-        if (collision.gameObject.tag == "Character"
-            && Math.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) >= 0.3)
-        {
-            if (gameObject.transform.position.x > collision.gameObject.transform.position.x)
-            {
-                collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.left * 50f);
-            }
-            else
-            {
-                collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.right * 50f);
-            }
+        // if (collision.gameObject.tag == "Character"
+        //     && Math.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) >= 0.3)
+        // {
+        //     if (gameObject.transform.position.x > collision.gameObject.transform.position.x)
+        //     {
+        //         collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.left * 50f);
+        //     }
+        //     else
+        //     {
+        //         collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.right * 50f);
+        //     }
 
-            if (GameManager.musicSettings)
-                characterDamaged.Play();
-            GameManager.currentNumberHearth--;
-        }
+        //     if (GameManager.musicSettings)
+        //         characterDamaged.Play();
+        //     GameManager.currentNumberHearth--;
+        // }
     }
 
     public Vector2 toVector2(Vector3 vector3)

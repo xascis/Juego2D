@@ -23,6 +23,7 @@ public class Character : MonoBehaviour
     public AudioSource musicJump;
     public AudioSource musicCoin;
     public AudioSource musicKey;
+    public AudioSource characterDamaged;
 
     void Start () {
         myAnimator = GetComponent<Animator>();
@@ -37,6 +38,7 @@ public class Character : MonoBehaviour
         musicJump = audioSource[0];
         musicCoin = audioSource[1];
         musicKey = audioSource[2];
+        characterDamaged = audioSource[3];
 	}
 	
 	void Update ()
@@ -128,7 +130,6 @@ public class Character : MonoBehaviour
             atTheDoor = true;
         }
 
-        
     }
 
     void OnTriggerExit2D(Collider2D collider)
@@ -146,9 +147,11 @@ public class Character : MonoBehaviour
     {
         if (other.gameObject.tag == "MobilePlatform") transform.SetParent(other.transform);
 
+        // si un enemigo toca al personaje
         if (other.gameObject.tag == "Enemy")
         {
-
+            if (GameManager.musicSettings) characterDamaged.Play();
+            // GameManager.currentNumberHearth--;
         }
     }
     void OnCollisionExit2D(Collision2D other)
