@@ -12,6 +12,9 @@ public class Character : MonoBehaviour
     public float jumpMovement = 400.0f;
     private float myWidth, myHeight;
 
+    public bool Grounded = true;
+    private bool atTheDoor = false;
+
     public Transform myTransform;
     public LayerMask groundMask;
     private Animator myAnimator;
@@ -40,7 +43,7 @@ public class Character : MonoBehaviour
 	{
 	    Vector2 lineCastPosition = myTransform.position - Vector3.up * myHeight;
 	    Debug.DrawLine(lineCastPosition, lineCastPosition + Vector2.down * 0.1f);
-	    bool Grounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down * 0.1f, groundMask);
+	    Grounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down * 0.1f, groundMask);
 
         if (Grounded && Input.GetButtonDown("Jump"))
         {
@@ -52,6 +55,16 @@ public class Character : MonoBehaviour
                 musicJump.Play();
             }
         }
+
+	    // animación
+	    if (Grounded)
+	    {
+	        myAnimator.SetTrigger("Grounded");
+	    }
+	    else
+	    {
+	        myAnimator.SetTrigger("Jump");
+	    }
 
         Speed = lateralMovement * Input.GetAxis("Horizontal");
         transform.Translate(Vector2.right * Speed * Time.deltaTime);
@@ -71,6 +84,12 @@ public class Character : MonoBehaviour
             GameManager.currentNumberHearth--;
             gameObject.GetComponent<Rigidbody2D>().transform.position = new Vector2(-8f, -3.75f);
         }
+
+	    // check si está dentro de la puerta con la llave y pulsa la tecla arriba
+	    if (GameManager.keyRedFound && Input.GetAxis("Vertical") > 0 && atTheDoor)
+	    {
+            DoorFinishLevel();
+	    }
 	}
 
     private void OnTriggerEnter2D(Collider2D collider)
@@ -104,6 +123,11 @@ public class Character : MonoBehaviour
             Destroy(collider.gameObject);
         }
 
+        if (collider.tag == "DoorFinish")
+        {
+            atTheDoor = true;
+        }
+
         
     }
 
@@ -111,42 +135,43 @@ public class Character : MonoBehaviour
     {
         if (collider.tag == "Zoom")
             GameObject.Find("MainVirtual").GetComponent<CinemachineVirtualCamera>().enabled = true;
-    }
 
-    void OnTriggerStay2D(Collider2D collision)
-    {
-        // fin de nivel, jugador entra por la puerta
-        if (collision.gameObject.tag == "DoorFinish"
-            && GameManager.keyRedFound)
+        if (collider.tag == "DoorFinish")
         {
-            // el jugador está en el nivel del tutorial, pasa a la pantalla de inicio
-            if (GameManager.currentLevel == 0)
-            {
-                SceneManager.LoadScene("StartScreen");
-            } else
-            {
-                // pasa al siguiente nivel
-                GameManager.currentLevel++;
-                if (GameManager.currentLevel > GameManager.maxLevel)
-                {
-                    SceneManager.LoadScene("StartScreen");
-                }
-                string nextLevel = "Level" + GameManager.currentLevel;
-                SceneManager.LoadScene(nextLevel);
-            }
-
-            
-
+            atTheDoor = false;
         }
     }
 
     void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.tag == "MobilePlatform") transform.SetParent(other.transform);
+
+        if (other.gameObject.tag == "Enemy")
+        {
+
+        }
     }
     void OnCollisionExit2D(Collision2D other)
     {
         if (other.gameObject.tag == "MobilePlatform") transform.SetParent(null);
     }
 
+    void DoorFinishLevel()
+    {
+        // el jugador está en el nivel del tutorial, pasa a la pantalla de inicio
+        if (GameManager.currentLevel == 0)
+        {
+            SceneManager.LoadScene("StartScreen");
+        } else
+        {
+            // pasa al siguiente nivel
+            GameManager.currentLevel++;
+            if (GameManager.currentLevel > GameManager.maxLevel)
+            {
+                SceneManager.LoadScene("StartScreen");
+            }
+            string nextLevel = "Level" + GameManager.currentLevel;
+            SceneManager.LoadScene(nextLevel);
+        }
+    }
 }

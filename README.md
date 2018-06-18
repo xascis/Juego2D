@@ -17,7 +17,12 @@ A continuación se muestran las tareas a realizar para la entrega.
 - [ ] cambiar control música
 - [ ] animar personajes
 
+### Nivel Tutorial
+- [ ] añadir cuatros de texto con explicaciones
+
 ### Jugador
+- [x] animación saltar
+- [x] pulsar la tecla arriba para entrar por la puerta y finalizar el nivel
 - [ ] parpadea y es inmune cuando es dañado
 - [ ] añadir armas con las que destruir los enemigos
 - [ ] botón de disparo
