@@ -10,6 +10,8 @@ A continuación se muestran las tareas a realizar para la entrega.
 - [x] Crear el listado de tareas
 
 ### General
+- [ ] transición entre pantalla principa - niveles y niveles - niveles
+- [ ] pantalla final de créditos
 
 ### Pantalla principal
 - [ ] cambiar control música
