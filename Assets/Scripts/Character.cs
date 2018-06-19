@@ -25,6 +25,10 @@ public class Character : MonoBehaviour
     public AudioSource musicKey;
     public AudioSource characterDamaged;
 
+    private bool _damaged;
+    private float _timer;
+    private float _timerMax;
+
     void Start () {
         myAnimator = GetComponent<Animator>();
         myBody = GetComponent<Rigidbody2D>();
@@ -39,15 +43,18 @@ public class Character : MonoBehaviour
         musicCoin = audioSource[1];
         musicKey = audioSource[2];
         characterDamaged = audioSource[3];
+        _damaged = false;
 	}
 	
 	void Update ()
 	{
+        print(Grounded);
+
 	    Vector2 lineCastPosition = myTransform.position - Vector3.up * myHeight;
 	    Debug.DrawLine(lineCastPosition, lineCastPosition + Vector2.down * 0.1f);
 	    Grounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down * 0.1f, groundMask);
 
-        if (Grounded && Input.GetButtonDown("Jump"))
+        if (Grounded && Input.GetButtonDown("Jump") && !_damaged)
         {
             myBody.AddForce(Vector2.up * jumpMovement);
 
@@ -67,7 +74,15 @@ public class Character : MonoBehaviour
 	    {
 	        myAnimator.SetTrigger("Jump");
 	    }
+        // espera 2 segundos para dejar de estar dañado
+        if(_damaged){
+            if(Waited(2)) {
+                _damaged = false;
+                _timer = 0;
+            }
+        }
 
+        // movimiento lateral con teclas
         Speed = lateralMovement * Input.GetAxis("Horizontal");
         transform.Translate(Vector2.right * Speed * Time.deltaTime);
         myAnimator.SetFloat("Speed", Mathf.Abs(Speed));
@@ -80,7 +95,7 @@ public class Character : MonoBehaviour
             transform.localScale = new Vector3(1, 1, 1);
         }
 
-        // restart level si se cae por un barranco o al agua
+        // reinicia el nivel si se cae por un barranco o al agua
         if (gameObject.transform.position.y < - 7)
         {
             GameManager.currentNumberHearth--;
@@ -150,6 +165,7 @@ public class Character : MonoBehaviour
         // si un enemigo toca al personaje
         if (other.gameObject.tag == "Enemy")
         {
+            _damaged = true;
             myAnimator.SetTrigger("Damaged");
             if (GameManager.musicSettings) characterDamaged.Play();
             // GameManager.currentNumberHearth--;
@@ -177,5 +193,16 @@ public class Character : MonoBehaviour
             string nextLevel = "Level" + GameManager.currentLevel;
             SceneManager.LoadScene(nextLevel);
         }
+    }
+
+    private bool Waited(float seconds)
+    {
+        _timerMax = seconds;
+        _timer += Time.deltaTime;
+        if (_timer >= _timerMax)
+        {
+            return true; //max reached - waited x - seconds
+        }
+        return false;
     }
 }
