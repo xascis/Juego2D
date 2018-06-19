@@ -6597,6 +6597,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 70011805254379484, guid: c065ff4d17596754094a6a177215a8e7,
+        type: 2}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c065ff4d17596754094a6a177215a8e7, type: 2}
   m_IsPrefabParent: 0
@@ -9540,7 +9545,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1308477291}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.099209, y: -2.2679396, z: -10}
+  m_LocalPosition: {x: -4.336684, y: -2.2679396, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -9628,7 +9633,6 @@ GameObject:
   - component: {fileID: 1380486114}
   - component: {fileID: 1380486113}
   - component: {fileID: 1380486115}
-  - component: {fileID: 1380486116}
   m_Layer: 0
   m_Name: MainVirtual
   m_TagString: Untagged
@@ -9691,28 +9695,6 @@ MonoBehaviour:
   m_BoundingShape2D: {fileID: 934610193}
   m_ConfineScreenEdges: 1
   m_Damping: 0
---- !u!114 &1380486116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1380486112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9427abce9969dad49a05257b3607fa0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Speed: 0
-  lateralMovement: 2
-  jumpMovement: 400
-  Grounded: 1
-  myTransform: {fileID: 0}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 0
-  musicJump: {fileID: 0}
-  musicCoin: {fileID: 0}
-  musicKey: {fileID: 0}
 --- !u!1 &1480682691
 GameObject:
   m_ObjectHideFlags: 3

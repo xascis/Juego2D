@@ -150,6 +150,7 @@ public class Character : MonoBehaviour
         // si un enemigo toca al personaje
         if (other.gameObject.tag == "Enemy")
         {
+            myAnimator.SetTrigger("Damaged");
             if (GameManager.musicSettings) characterDamaged.Play();
             // GameManager.currentNumberHearth--;
         }

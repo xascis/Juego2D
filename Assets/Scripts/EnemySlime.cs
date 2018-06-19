@@ -33,7 +33,7 @@ public class EnemySlime : MonoBehaviour
         // sonidos para cada situacíon
         var audioSource = GetComponents<AudioSource>();
         enemyDestroyed = audioSource[0];
-        characterDamaged = audioSource[1];
+        // characterDamaged = audioSource[1];
     }
 
     void FixedUpdate()
@@ -63,19 +63,19 @@ public class EnemySlime : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // character kills the enemy
-        if (collision.gameObject.tag == "Character"
-            && Math.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) < 0.3
-            && gameObject.transform.position.y - collision.gameObject.transform.position.y < 0)
-        {
-            collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 100f);
+        // if (collision.gameObject.tag == "Character"
+        //     && Math.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) < 0.3
+        //     && gameObject.transform.position.y - collision.gameObject.transform.position.y < 0)
+        // {
+        //     collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 100f);
 
-            if (GameManager.musicSettings)
-                enemyDestroyed.Play();
+        //     if (GameManager.musicSettings)
+        //         enemyDestroyed.Play();
 
-            gameObject.GetComponent<Collider2D>().enabled = false;
-            myAnimator.SetBool("Dead", true);
-            Destroy(gameObject, 1.5f);
-        }
+        //     gameObject.GetComponent<Collider2D>().enabled = false;
+        //     myAnimator.SetBool("Dead", true);
+        //     Destroy(gameObject, 1.5f);
+        // }
 
         // enemy damages character
         // if (collision.gameObject.tag == "Character"
