@@ -48,11 +48,9 @@ public class Character : MonoBehaviour
 	
 	void Update ()
 	{
-        print(Grounded);
-
 	    Vector2 lineCastPosition = myTransform.position - Vector3.up * myHeight;
 	    Debug.DrawLine(lineCastPosition, lineCastPosition + Vector2.down * 0.1f);
-	    Grounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down * 0.1f, groundMask);
+	    Grounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down * 0.05f, groundMask);
 
         if (Grounded && Input.GetButtonDown("Jump") && !_damaged)
         {
