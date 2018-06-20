@@ -36,7 +36,7 @@ public class EnemySlime : MonoBehaviour
         // characterDamaged = audioSource[1];
     }
 
-    void FixedUpdate()
+    void Update()
     {
 
         Vector2 lineCastPosition = myTransform.position - myTransform.right * myWidth + Vector3.up * myHeight;
@@ -63,19 +63,18 @@ public class EnemySlime : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // character kills the enemy
-        // if (collision.gameObject.tag == "Character"
-        //     && Math.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) < 0.3
-        //     && gameObject.transform.position.y - collision.gameObject.transform.position.y < 0)
-        // {
-        //     collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 100f);
+        if (collision.gameObject.tag == "Shoes")
+        {
+            // collision.gameObject.myBody.AddForce(Vector2.up * 100f);
 
-        //     if (GameManager.musicSettings)
-        //         enemyDestroyed.Play();
+            if (GameManager.musicSettings){
+                enemyDestroyed.Play();
+            }
 
-        //     gameObject.GetComponent<Collider2D>().enabled = false;
-        //     myAnimator.SetBool("Dead", true);
-        //     Destroy(gameObject, 1.5f);
-        // }
+            gameObject.GetComponent<Collider2D>().enabled = false;
+            myAnimator.SetBool("Dead", true);
+            Destroy(gameObject, 1.5f);
+        }
 
         // enemy damages character
         // if (collision.gameObject.tag == "Character"
@@ -94,6 +93,22 @@ public class EnemySlime : MonoBehaviour
         //         characterDamaged.Play();
         //     GameManager.currentNumberHearth--;
         // }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collider){
+        if (collider.gameObject.tag == "Shoes")
+        {
+            // collision.gameObject.myBody.AddForce(Vector2.up * 100f);
+
+            if (GameManager.musicSettings){
+                enemyDestroyed.Play();
+            }
+
+            myBody.bodyType = RigidbodyType2D.Static;
+            gameObject.GetComponent<Collider2D>().enabled = false;
+            myAnimator.SetBool("Dead", true);
+            Destroy(gameObject, 2f);
+        }
     }
 
     public Vector2 toVector2(Vector3 vector3)

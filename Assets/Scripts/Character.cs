@@ -29,6 +29,8 @@ public class Character : MonoBehaviour
     private float _timer;
     private float _timerMax;
 
+    private Vector3 _lastGroundedPosition;
+
     void Start () {
         myAnimator = GetComponent<Animator>();
         myBody = GetComponent<Rigidbody2D>();
@@ -66,9 +68,10 @@ public class Character : MonoBehaviour
 	    // animación
 	    if (Grounded)
 	    {
+            _lastGroundedPosition = myTransform.position;
 	        myAnimator.SetTrigger("Grounded");
 	    }
-	    else
+	    else if (!_damaged)
 	    {
 	        myAnimator.SetTrigger("Jump");
 	    }
@@ -97,7 +100,9 @@ public class Character : MonoBehaviour
         if (gameObject.transform.position.y < - 7)
         {
             GameManager.currentNumberHearth--;
-            gameObject.GetComponent<Rigidbody2D>().transform.position = new Vector2(-8f, -3.75f);
+            if(GameManager.currentNumberHearth != 0) {
+                myTransform.position = _lastGroundedPosition;
+            }
         }
 
 	    // check si está dentro de la puerta con la llave y pulsa la tecla arriba
@@ -169,6 +174,7 @@ public class Character : MonoBehaviour
             // GameManager.currentNumberHearth--;
         }
     }
+
     void OnCollisionExit2D(Collision2D other)
     {
         if (other.gameObject.tag == "MobilePlatform") transform.SetParent(null);
