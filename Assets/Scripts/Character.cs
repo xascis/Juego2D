@@ -19,6 +19,7 @@ public class Character : MonoBehaviour
     public LayerMask groundMask;
     private Animator myAnimator;
     private Rigidbody2D myBody;
+    private SpriteRenderer mySpriteRenderer;
 
     public AudioSource musicJump;
     public AudioSource musicCoin;
@@ -28,6 +29,7 @@ public class Character : MonoBehaviour
     private bool _damaged;
     private float _timer;
     private float _timerMax;
+    private bool _coroutineColorCalled;
 
     private Vector3 _lastGroundedPosition;
 
@@ -35,7 +37,7 @@ public class Character : MonoBehaviour
         myAnimator = GetComponent<Animator>();
         myBody = GetComponent<Rigidbody2D>();
         myTransform = transform;
-        SpriteRenderer mySpriteRenderer = GetComponent<SpriteRenderer>();
+        mySpriteRenderer = GetComponent<SpriteRenderer>();
         myWidth = mySpriteRenderer.bounds.extents.x;
         myHeight = mySpriteRenderer.bounds.extents.y;
 
@@ -46,7 +48,8 @@ public class Character : MonoBehaviour
         musicKey = audioSource[2];
         characterDamaged = audioSource[3];
         _damaged = false;
-	}
+        _coroutineColorCalled = false;
+    }
 	
 	void Update ()
 	{
@@ -54,7 +57,7 @@ public class Character : MonoBehaviour
 	    Debug.DrawLine(lineCastPosition, lineCastPosition + Vector2.down * 0.1f);
 	    Grounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down * 0.05f, groundMask);
 
-        if (Grounded && Input.GetButtonDown("Jump") && !_damaged)
+        if (Grounded && Input.GetButtonDown("Jump"))
         {
             myBody.AddForce(Vector2.up * jumpMovement);
 
@@ -75,13 +78,6 @@ public class Character : MonoBehaviour
 	    {
 	        myAnimator.SetTrigger("Jump");
 	    }
-        // espera 2 segundos para dejar de estar dañado
-        if(_damaged){
-            if(Waited(2)) {
-                _damaged = false;
-                _timer = 0;
-            }
-        }
 
         // movimiento lateral con teclas
         Speed = lateralMovement * Input.GetAxis("Horizontal");
@@ -110,6 +106,32 @@ public class Character : MonoBehaviour
 	    {
             DoorFinishLevel();
 	    }
+
+	    // cambia de color al estar dañado y es inmune
+	    if (_damaged)
+	    {
+	        if (!_coroutineColorCalled)
+	        {
+                StartCoroutine("color");
+	        }
+
+	        if (Waited(3)) {
+	            _damaged = false;
+	            _timer = 0;
+	        }
+	    }
+//	    else
+//	    {
+//	        mySpriteRenderer.material.SetColor("_Color", Color.white);
+//	    }
+
+	    // espera 3 segundos para dejar de estar dañado
+//	    if (_damaged) {
+//	        if(Waited(3)) {
+//	            _damaged = false;
+//	            _timer = 0;
+//	        }
+//	    }
 	}
 
     private void OnTriggerEnter2D(Collider2D collider)
@@ -169,7 +191,7 @@ public class Character : MonoBehaviour
         if (other.gameObject.tag == "Enemy")
         {
             _damaged = true;
-            myAnimator.SetTrigger("Damaged");
+//            myAnimator.SetTrigger("Damaged");
             if (GameManager.musicSettings) characterDamaged.Play();
             // GameManager.currentNumberHearth--;
         }
@@ -208,5 +230,19 @@ public class Character : MonoBehaviour
             return true; //max reached - waited x - seconds
         }
         return false;
+    }
+
+    // cambia de color después de recibir daño
+    IEnumerator color(){
+        while(_damaged)
+        {
+            _coroutineColorCalled = true;
+            mySpriteRenderer.material.SetColor("_Color", new Color(0.9811321f, 0.5507298f, 0.5507298f));
+            yield return new WaitForSeconds(0.3f);
+            mySpriteRenderer.material.SetColor("_Color", Color.white);
+            yield return new WaitForSeconds(0.3f);
+        }
+        _coroutineColorCalled = false;
+
     }
 }
