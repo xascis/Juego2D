@@ -36,7 +36,7 @@ public class Character : MonoBehaviour
     void Start () {
         myAnimator = GetComponent<Animator>();
         myBody = GetComponent<Rigidbody2D>();
-        myTransform = transform;
+        myTransform = GetComponent<Transform>();
         mySpriteRenderer = GetComponent<SpriteRenderer>();
         myWidth = mySpriteRenderer.bounds.extents.x;
         myHeight = mySpriteRenderer.bounds.extents.y;
