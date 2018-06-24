@@ -13,6 +13,7 @@ public class Character : MonoBehaviour
     private float myWidth, myHeight;
 
     public GameObject fireball;
+    private String fireballDirection = "right";
 
     public bool Grounded = true;
     private bool atTheDoor = false;
@@ -81,14 +82,6 @@ public class Character : MonoBehaviour
 	        myAnimator.SetTrigger("Jump");
 	    }
 
-	    if (Input.GetButtonDown("Fire1")) {
-	        GameObject fireballClone;
-	        fireballClone = Instantiate(fireball, transform.position, transform.rotation);
-
-	        fireballClone.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 250f);
-	        fireballClone.GetComponent<Rigidbody2D>().AddForce(Vector2.right * 200f);
-	    }
-
         // movimiento lateral con teclas
         Speed = lateralMovement * Input.GetAxis("Horizontal");
         transform.Translate(Vector2.right * Speed * Time.deltaTime);
@@ -97,10 +90,25 @@ public class Character : MonoBehaviour
         if (Speed < 0)
         {
             transform.localScale = new Vector3(-1, 1, 1);
+            fireballDirection = "left";
         } else
         {
             transform.localScale = new Vector3(1, 1, 1);
+            if (Speed != 0) fireballDirection = "right";
         }
+
+	    if (Input.GetButtonDown("Fire1")) {
+	        if (Fireball.fireballNumber < 3)
+	        {
+	            GameObject fireballClone;
+	            fireballClone = Instantiate(GameObject.FindGameObjectWithTag("Fireball"), transform.position, transform.rotation);
+	            fireballClone.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+	            Vector2 vector2 = Vector2.right * 200f;
+	            if (fireballDirection == "left") vector2 = Vector2.left * 200f;
+	            fireballClone.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 250f);
+	            fireballClone.GetComponent<Rigidbody2D>().AddForce(vector2);
+	        }
+	    }
 
         // reinicia el nivel si se cae por un barranco o al agua
         if (gameObject.transform.position.y < - 7)
