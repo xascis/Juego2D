@@ -33,7 +33,6 @@ public class EnemySlime : MonoBehaviour
         // sonidos para cada situacíon
         var audioSource = GetComponents<AudioSource>();
         enemyDestroyed = audioSource[0];
-        // characterDamaged = audioSource[1];
     }
 
     void Update()
@@ -63,18 +62,18 @@ public class EnemySlime : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // character kills the enemy
-        if (collision.gameObject.tag == "Shoes")
-        {
-            // collision.gameObject.myBody.AddForce(Vector2.up * 100f);
-
-            if (GameManager.musicSettings){
-                enemyDestroyed.Play();
-            }
-
-            gameObject.GetComponent<Collider2D>().enabled = false;
-            myAnimator.SetBool("Dead", true);
-            Destroy(gameObject, 1.5f);
-        }
+//        if (collision.gameObject.tag == "Shoes")
+//        {
+//            // collision.gameObject.myBody.AddForce(Vector2.up * 100f);
+//
+//            if (GameManager.musicSettings){
+//                enemyDestroyed.Play();
+//            }
+//
+//            gameObject.GetComponent<Collider2D>().enabled = false;
+//            myAnimator.SetBool("Dead", true);
+//            Destroy(gameObject, 1.5f);
+//        }
 
         // enemy damages character
         // if (collision.gameObject.tag == "Character"

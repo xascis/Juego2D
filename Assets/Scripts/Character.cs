@@ -12,6 +12,8 @@ public class Character : MonoBehaviour
     public float jumpMovement = 400.0f;
     private float myWidth, myHeight;
 
+    public GameObject fireball;
+
     public bool Grounded = true;
     private bool atTheDoor = false;
 
@@ -77,6 +79,14 @@ public class Character : MonoBehaviour
 	    else if (!_damaged)
 	    {
 	        myAnimator.SetTrigger("Jump");
+	    }
+
+	    if (Input.GetButtonDown("Fire1")) {
+	        GameObject fireballClone;
+	        fireballClone = Instantiate(fireball, transform.position, transform.rotation);
+
+	        fireballClone.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 250f);
+	        fireballClone.GetComponent<Rigidbody2D>().AddForce(Vector2.right * 200f);
 	    }
 
         // movimiento lateral con teclas
@@ -190,9 +200,12 @@ public class Character : MonoBehaviour
         // si un enemigo toca al personaje
         if (other.gameObject.tag == "Enemy")
         {
-            _damaged = true;
+            if (!_damaged)
+            {
+                if (GameManager.musicSettings) characterDamaged.Play();
+                _damaged = true;
+            }
 //            myAnimator.SetTrigger("Damaged");
-            if (GameManager.musicSettings) characterDamaged.Play();
             // GameManager.currentNumberHearth--;
         }
     }
@@ -202,6 +215,7 @@ public class Character : MonoBehaviour
         if (other.gameObject.tag == "MobilePlatform") transform.SetParent(null);
     }
 
+    // función finaliza nivel
     void DoorFinishLevel()
     {
         // el jugador está en el nivel del tutorial, pasa a la pantalla de inicio
@@ -221,6 +235,7 @@ public class Character : MonoBehaviour
         }
     }
 
+    // funciona para esperar x segundos
     private bool Waited(float seconds)
     {
         _timerMax = seconds;

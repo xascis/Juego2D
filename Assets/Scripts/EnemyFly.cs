@@ -35,37 +35,42 @@ public class EnemyFly : MonoBehaviour {
         positionList.Add(new Vector2(myTransform.position.x + distance, myTransform.position.y));
         flying = true;
 
+        // sonidos
+        var audioSource = GetComponents<AudioSource>();
+        enemyDestroyed = audioSource[0];
+
     }
     
     // Update is called once per frame
     void Update () {
-//        print(initialPosition);
-
-//        Vector2 lineCastPosition = myTransform.position - myTransform.right * myWidth + Vector3.up * myHeight;
-//        Debug.DrawLine(lineCastPosition, lineCastPosition + Vector2.down);
-
-        // gira
-//        if (lineCastPosition.x < initialPosition || lineCastPosition.x > lastPosition)
-//        {
-//            Vector3 currentRotation = myTransform.eulerAngles;
-//            currentRotation.y += 180;
-//            myTransform.eulerAngles = currentRotation;
-//        }
-        // está moviendose
         if (myTransform.position != positionList[_current]) {
             myTransform.position = Vector3.MoveTowards(myTransform.position, positionList[_current], speed * Time.deltaTime);
         }
         else
         {
+            // gira al acabar el recorrido
             Vector3 currentRotation = myTransform.eulerAngles;
             currentRotation.y += 180;
             myTransform.eulerAngles = currentRotation;
 
             _current = (_current + 1) % positionList.Count;
-
-
-            print(currentRotation);
         }
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D collider){
+        if (collider.gameObject.tag == "Shoes")
+        {
+            // collision.gameObject.myBody.AddForce(Vector2.up * 100f);
+
+            if (GameManager.musicSettings){
+                enemyDestroyed.Play();
+            }
+
+            myBody.bodyType = RigidbodyType2D.Dynamic;
+            gameObject.GetComponent<Collider2D>().enabled = false;
+            myAnimator.SetBool("Dead", true);
+            Destroy(gameObject, 3f);
+        }
     }
 }
