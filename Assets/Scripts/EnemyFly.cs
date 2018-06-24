@@ -59,7 +59,7 @@ public class EnemyFly : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D collider){
-        if (collider.gameObject.tag == "Shoes")
+        if (collider.gameObject.tag == "Shoes" || collider.gameObject.tag == "Fireball")
         {
             // collision.gameObject.myBody.AddForce(Vector2.up * 100f);
 
