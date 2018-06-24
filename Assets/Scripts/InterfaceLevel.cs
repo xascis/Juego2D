@@ -10,6 +10,7 @@ public class InterfaceLevel : MonoBehaviour {
     public Image imageUnitNumberCoins;
     public Image imageDecimalNumberCoins;
     public Image imageKeyRedFound;
+    public Image imageGemYellow;
     public Image imageHearth1;
     public Image imageHearth2;
     public Image imageHearth3;
@@ -20,6 +21,7 @@ public class InterfaceLevel : MonoBehaviour {
         GameManager.currentNumberHearth = 3;
         GameManager.currentNumberCoins = 0;
         GameManager.keyRedFound = false;
+	    GameManager.fireballSkill = false;
         imageDecimalNumberCoins.GetComponent<Image>().enabled = false;
 
         // se ejecuta la música
@@ -44,6 +46,15 @@ public class InterfaceLevel : MonoBehaviour {
         {
             imageKeyRedFound.GetComponent<Image>().sprite = Resources.Load<Sprite>("hud_keyRed");
         }
+
+	    if (GameManager.fireballSkill)
+	    {
+	        imageGemYellow.enabled = true;
+	    }
+	    else
+	    {
+	        imageGemYellow.enabled = false;
+	    }
 
         // corazones
         switch (GameManager.currentNumberHearth)

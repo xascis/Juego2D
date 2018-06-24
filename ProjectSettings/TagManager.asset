@@ -16,6 +16,7 @@ TagManager:
   - Shoes
   - Fireball
   - Void
+  - MushroomRed
   layers:
   - Default
   - TransparentFX

@@ -183,6 +183,11 @@ public class Character : MonoBehaviour
             Destroy(collider.gameObject);
         }
 
+        if (collider.tag == "MushroomRed")
+        {
+            GameManager.fireballSkill = true;
+        }
+
         if (collider.tag == "DoorFinish")
         {
             atTheDoor = true;
@@ -220,9 +225,15 @@ public class Character : MonoBehaviour
             {
                 if (GameManager.musicSettings) characterDamaged.Play();
                 _damaged = true;
+                if (GameManager.fireballSkill == true)
+                {
+                    GameManager.fireballSkill = false;
+                }
+                else
+                {
+                    GameManager.currentNumberHearth--;
+                }
             }
-//            myAnimator.SetTrigger("Damaged");
-            // GameManager.currentNumberHearth--;
         }
     }
 
