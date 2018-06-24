@@ -11,6 +11,8 @@ public static class GameManager {
     // número de corazones
     public static int currentNumberHearth = 3;
 
+    // habilidad
+    public static bool fireballSkill = false;
     // estado de la llave
     public static bool keyRedFound = false;
 

@@ -98,7 +98,7 @@ public class Character : MonoBehaviour
         }
 
 	    if (Input.GetButtonDown("Fire1")) {
-	        if (Fireball.fireballNumber < 3)
+	        if (Fireball.fireballNumber < 3 && GameManager.fireballSkill == true)
 	        {
 	            GameObject fireballClone;
 	            fireballClone = Instantiate(GameObject.FindGameObjectWithTag("Fireball"), transform.position, transform.rotation);
@@ -111,13 +111,13 @@ public class Character : MonoBehaviour
 	    }
 
         // reinicia el nivel si se cae por un barranco o al agua
-        if (gameObject.transform.position.y < - 7)
-        {
-            GameManager.currentNumberHearth--;
-            if(GameManager.currentNumberHearth != 0) {
-                myTransform.position = _lastGroundedPosition;
-            }
-        }
+//        if (gameObject.transform.position.y < - 7)
+//        {
+//            GameManager.currentNumberHearth--;
+//            if(GameManager.currentNumberHearth != 0) {
+//                myTransform.position = _lastGroundedPosition;
+//            }
+//        }
 
 	    // check si está dentro de la puerta con la llave y pulsa la tecla arriba
 	    if (GameManager.keyRedFound && Input.GetAxis("Vertical") > 0 && atTheDoor)
@@ -186,6 +186,14 @@ public class Character : MonoBehaviour
         if (collider.tag == "DoorFinish")
         {
             atTheDoor = true;
+        }
+        // reinicia el nivel si se cae por un barranco o al agua
+        if (collider.tag == "Void")
+        {
+            GameManager.currentNumberHearth--;
+            if(GameManager.currentNumberHearth != 0) {
+                myTransform.position = _lastGroundedPosition;
+            }
         }
 
     }

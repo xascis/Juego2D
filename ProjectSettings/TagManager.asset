@@ -15,6 +15,7 @@ TagManager:
   - Enemy
   - Shoes
   - Fireball
+  - Void
   layers:
   - Default
   - TransparentFX
