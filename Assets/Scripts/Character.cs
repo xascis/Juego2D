@@ -28,11 +28,14 @@ public class Character : MonoBehaviour
     public AudioSource musicCoin;
     public AudioSource musicKey;
     public AudioSource characterDamaged;
+    public AudioSource launchFireball;
+    public AudioSource mushroomRed;
 
     private bool _damaged;
+    private bool _coroutineColorCalled;
+    // variables función Wait
     private float _timer;
     private float _timerMax;
-    private bool _coroutineColorCalled;
 
     private Vector3 _lastGroundedPosition;
 
@@ -50,6 +53,8 @@ public class Character : MonoBehaviour
         musicCoin = audioSource[1];
         musicKey = audioSource[2];
         characterDamaged = audioSource[3];
+        launchFireball = audioSource[4];
+        mushroomRed = audioSource[5];
         _damaged = false;
         _coroutineColorCalled = false;
     }
@@ -98,8 +103,10 @@ public class Character : MonoBehaviour
         }
 
 	    if (Input.GetButtonDown("Fire1")) {
-	        if (Fireball.fireballNumber < 3 && GameManager.fireballSkill == true)
+	        if (Fireball.fireballNumber < 3 && GameManager.fireballSkill)
 	        {
+	            if (GameManager.musicSettings){launchFireball.Play();}
+
 	            GameObject fireballClone;
 	            fireballClone = Instantiate(GameObject.FindGameObjectWithTag("Fireball"), transform.position, transform.rotation);
 	            fireballClone.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
@@ -185,6 +192,7 @@ public class Character : MonoBehaviour
 
         if (collider.tag == "MushroomRed")
         {
+            if(GameManager.musicSettings){mushroomRed.Play();}
             GameManager.fireballSkill = true;
         }
 

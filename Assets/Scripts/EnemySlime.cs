@@ -97,15 +97,13 @@ public class EnemySlime : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider){
         if (collider.gameObject.tag == "Shoes" || collider.gameObject.tag == "Fireball")
         {
-            // collision.gameObject.myBody.AddForce(Vector2.up * 100f);
-
             if (GameManager.musicSettings){
                 enemyDestroyed.Play();
             }
 
             myBody.bodyType = RigidbodyType2D.Static;
             gameObject.GetComponent<Collider2D>().enabled = false;
-            myAnimator.SetBool("Dead", true);
+            myAnimator.SetTrigger("Dead");
             Destroy(gameObject, 2f);
         }
     }

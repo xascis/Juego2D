@@ -13,6 +13,11 @@ public class EnemySnail : MonoBehaviour {
 
 	private AudioSource enemyDestroyed;
 
+	private int hitNumber;
+	private bool shellForm;
+	private float _timerMax;
+	private float _timer;
+
 	// Use this for initialization
 	void Start () {
 		myAnimator = GetComponent<Animator>();
@@ -25,45 +30,87 @@ public class EnemySnail : MonoBehaviour {
 		// sonidos para cada situacíon
 		var audioSource = GetComponents<AudioSource>();
 		enemyDestroyed = audioSource[0];
+
+		// número de golpes para ser eliminado
+		hitNumber = 0;
+		shellForm = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Vector2 lineCastPosition = myTransform.position - myTransform.right * myWidth + Vector3.up * myHeight;
-		// dibuja una linea para saber si esta en el suelo
-		Debug.DrawLine(lineCastPosition, lineCastPosition + Vector2.down);
-		bool isGrounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down, groundMask);
-		// dibuja una linea para saber si delante tiene un obstáculo
-		Debug.DrawLine(lineCastPosition,lineCastPosition - toVector2(myTransform.right) * 0.1f);
-		bool isBlocked = Physics2D.Linecast(lineCastPosition, lineCastPosition - toVector2(myTransform.right) * 0.1f, groundMask);
-
-		// da la vuelta al llegar a un obstaculo o se acaba el suelo
-		if (!isGrounded || isBlocked)
+		if (!shellForm)
 		{
-			Vector3 currentRotation = myTransform.eulerAngles;
-			currentRotation.y += 180;
-			myTransform.eulerAngles = currentRotation;
+			Vector2 lineCastPosition = myTransform.position - myTransform.right * myWidth + Vector3.up * myHeight;
+			// dibuja una linea para saber si esta en el suelo
+			Debug.DrawLine(lineCastPosition, lineCastPosition + Vector2.down);
+			bool isGrounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down, groundMask);
+			// dibuja una linea para saber si delante tiene un obstáculo
+			Debug.DrawLine(lineCastPosition,lineCastPosition - toVector2(myTransform.right) * 0.1f);
+			bool isBlocked = Physics2D.Linecast(lineCastPosition, lineCastPosition - toVector2(myTransform.right) * 0.1f, groundMask);
+
+			// da la vuelta al llegar a un obstaculo o se acaba el suelo
+			if (!isGrounded || isBlocked)
+			{
+				Vector3 currentRotation = myTransform.eulerAngles;
+				currentRotation.y += 180;
+				myTransform.eulerAngles = currentRotation;
+			}
+			// Always move foward
+			Vector2 myVelocity = myBody.velocity;
+			myVelocity.x = - myTransform.right.x * speed;
+			myBody.velocity = myVelocity;
 		}
-		// Always move foward
-		Vector2 myVelocity = myBody.velocity;
-		myVelocity.x = - myTransform.right.x * speed;
-		myBody.velocity = myVelocity;
+		else
+		{
+			if (Waited(5))
+			{
+				myTransform.gameObject.tag = "Enemy";
+				myAnimator.SetTrigger("Walk");
+				shellForm = false;
+				_timer = 0;
+				print("snal walking");
+			}
+		}
+
 	}
 
 	private void OnTriggerEnter2D(Collider2D collider){
 		if (collider.gameObject.tag == "Shoes" || collider.gameObject.tag == "Fireball")
 		{
-			// collision.gameObject.myBody.AddForce(Vector2.up * 100f);
-
-			if (GameManager.musicSettings){
-				enemyDestroyed.Play();
+			if (!shellForm)
+			{
+				if (GameManager.musicSettings){
+					enemyDestroyed.Play();
+				}
+				if (hitNumber > 1)
+				{
+					myBody.bodyType = RigidbodyType2D.Dynamic;
+					gameObject.GetComponent<Collider2D>().enabled = false;
+					myAnimator.SetTrigger("Dead");
+					Destroy(gameObject, 2f);
+				}
+				else
+				{
+					hitNumber += 1;
+					print(hitNumber);
+					myTransform.gameObject.tag = "Untagged";
+					shellForm = true;
+					myAnimator.SetTrigger("Shell");
+				}
 			}
-
-			myBody.bodyType = RigidbodyType2D.Static;
-			gameObject.GetComponent<Collider2D>().enabled = false;
-			myAnimator.SetBool("Dead", true);
-			Destroy(gameObject, 2f);
 		}
+	}
+
+	// funciona para esperar x segundos
+	private bool Waited(float seconds)
+	{
+		_timerMax = seconds;
+		_timer += Time.deltaTime;
+		if (_timer >= _timerMax)
+		{
+			return true; //max reached - waited x - seconds
+		}
+		return false;
 	}
 
 	public Vector2 toVector2(Vector3 vector3)

@@ -19,9 +19,7 @@ public class Shoes : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider){
         if (collider.gameObject.tag == "Enemy")
         {
-            print("shoes collider");
             characterBody.AddForce(Vector2.up * 400f);
-
         }
     }
 }
