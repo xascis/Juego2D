@@ -11,6 +11,7 @@ public class InterfaceLevel : MonoBehaviour {
     public Image imageDecimalNumberCoins;
     public Image imageKeyRedFound;
     public Image imageGemYellow;
+    public Image imageGemBox;
     public Image imageHearth1;
     public Image imageHearth2;
     public Image imageHearth3;
@@ -49,10 +50,12 @@ public class InterfaceLevel : MonoBehaviour {
 
 	    if (GameManager.fireballSkill)
 	    {
+	        imageGemBox.enabled = true;
 	        imageGemYellow.enabled = true;
 	    }
 	    else
 	    {
+	        imageGemBox.enabled = false;
 	        imageGemYellow.enabled = false;
 	    }
 

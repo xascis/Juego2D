@@ -176,7 +176,10 @@ public class Character : MonoBehaviour
         }
 
         if (collider.tag == "Zoom")
+        {
             GameObject.Find("MainVirtual").GetComponent<CinemachineVirtualCamera>().enabled = false;
+        }
+
 
         // cuando el jugador encuentra la llave
         if (collider.tag == "Key")
@@ -214,7 +217,9 @@ public class Character : MonoBehaviour
     void OnTriggerExit2D(Collider2D collider)
     {
         if (collider.tag == "Zoom")
+        {
             GameObject.Find("MainVirtual").GetComponent<CinemachineVirtualCamera>().enabled = true;
+        }
 
         if (collider.tag == "DoorFinish")
         {
@@ -233,7 +238,7 @@ public class Character : MonoBehaviour
             {
                 if (GameManager.musicSettings) characterDamaged.Play();
                 _damaged = true;
-                if (GameManager.fireballSkill == true)
+                if (GameManager.fireballSkill)
                 {
                     GameManager.fireballSkill = false;
                 }
@@ -293,6 +298,5 @@ public class Character : MonoBehaviour
             yield return new WaitForSeconds(0.3f);
         }
         _coroutineColorCalled = false;
-
     }
 }
