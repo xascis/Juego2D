@@ -10,6 +10,7 @@ public class EnemySlime : MonoBehaviour
 
     public float speed;
     public LayerMask groundMask;
+    public LayerMask objectGroundMask;
     private float myWidth, myHeight;
     private Transform myTransform;
 
@@ -45,9 +46,10 @@ public class EnemySlime : MonoBehaviour
         // dibuja una linea para saber si delante tiene un obstáculo
         Debug.DrawLine(lineCastPosition,lineCastPosition - toVector2(myTransform.right) * 0.1f);
         bool isBlocked = Physics2D.Linecast(lineCastPosition, lineCastPosition - toVector2(myTransform.right) * 0.1f, groundMask);
+        bool isObject = Physics2D.Linecast(lineCastPosition, lineCastPosition - toVector2(myTransform.right) * 0.1f, objectGroundMask);
 
         // da la vuelta al llegar a un obstaculo o se acaba el suelo
-        if (!isGrounded || isBlocked)
+        if (!isGrounded || isBlocked || isObject)
         {
             Vector3 currentRotation = myTransform.eulerAngles;
             currentRotation.y += 180;

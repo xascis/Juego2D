@@ -373,6 +373,11 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 224456588079009898, guid: 448e8c88a3668854984ac4713f411f04,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -4.5999756
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 448e8c88a3668854984ac4713f411f04, type: 2}
   m_IsPrefabParent: 0
@@ -5713,7 +5718,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4022212048050688, guid: e75642089b8217046bd4bc6a2e5e7301, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1.9284714
+      value: 1.41
       objectReference: {fileID: 0}
     - target: {fileID: 4022212048050688, guid: e75642089b8217046bd4bc6a2e5e7301, type: 2}
       propertyPath: m_LocalPosition.z
@@ -6155,11 +6160,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4053007996172582, guid: 843cdf12b4efd374f98f5f7263ee2bf3, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 6.55
+      value: 6.6
       objectReference: {fileID: 0}
     - target: {fileID: 4053007996172582, guid: 843cdf12b4efd374f98f5f7263ee2bf3, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -9.41
+      value: -9.4
       objectReference: {fileID: 0}
     - target: {fileID: 4053007996172582, guid: 843cdf12b4efd374f98f5f7263ee2bf3, type: 2}
       propertyPath: m_LocalPosition.z
@@ -7184,11 +7189,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4740018851334358, guid: cb47aae95332824418609465517dc94a, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0.5242548
+      value: 6.31
       objectReference: {fileID: 0}
     - target: {fileID: 4740018851334358, guid: cb47aae95332824418609465517dc94a, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -3.2045813
+      value: -3.418
       objectReference: {fileID: 0}
     - target: {fileID: 4740018851334358, guid: cb47aae95332824418609465517dc94a, type: 2}
       propertyPath: m_LocalPosition.z
@@ -10232,7 +10237,7 @@ Camera:
   far clip plane: 5000
   field of view: 40
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 2.76
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -10255,7 +10260,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1308477291}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -3.8579454, y: -2.2679398, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
