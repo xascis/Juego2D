@@ -12,6 +12,7 @@ public class Character : MonoBehaviour
     public float jumpMovement = 400.0f;
     private float myWidth, myHeight;
 
+    // fireball
     public GameObject fireball;
     private String fireballDirection = "right";
 
@@ -58,12 +59,12 @@ public class Character : MonoBehaviour
         _damaged = false;
         _coroutineColorCalled = false;
     }
-	
-	void Update ()
-	{
-	    Vector2 lineCastPosition = myTransform.position - Vector3.up * myHeight;
-	    Debug.DrawLine(lineCastPosition, lineCastPosition + Vector2.down * 0.1f);
-	    Grounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down * 0.05f, groundMask);
+    
+    void Update ()
+    {
+        Vector2 lineCastPosition = myTransform.position - Vector3.up * myHeight;
+        Debug.DrawLine(lineCastPosition, lineCastPosition + Vector2.down * 0.1f);
+        Grounded = Physics2D.Linecast(lineCastPosition, lineCastPosition + Vector2.down * 0.05f, groundMask);
 
         if (Grounded && Input.GetButtonDown("Jump"))
         {
@@ -76,16 +77,16 @@ public class Character : MonoBehaviour
             }
         }
 
-	    // animación
-	    if (Grounded)
-	    {
+        // animación
+        if (Grounded)
+        {
             _lastGroundedPosition = myTransform.position;
-	        myAnimator.SetTrigger("Grounded");
-	    }
-	    else if (!_damaged)
-	    {
-	        myAnimator.SetTrigger("Jump");
-	    }
+            myAnimator.SetTrigger("Grounded");
+        }
+        else if (!_damaged)
+        {
+            myAnimator.SetTrigger("Jump");
+        }
 
         // movimiento lateral con teclas
         Speed = lateralMovement * Input.GetAxis("Horizontal");
@@ -102,62 +103,42 @@ public class Character : MonoBehaviour
             if (Speed != 0) fireballDirection = "right";
         }
 
-	    if (Input.GetButtonDown("Fire1")) {
-	        if (Fireball.fireballNumber < 3 && GameManager.fireballSkill)
-	        {
-	            if (GameManager.musicSettings){launchFireball.Play();}
+        // dispara bolas de fuego
+        if (Input.GetButtonDown("Fire1")) {
+            if (Fireball.fireballNumber < 3 && GameManager.fireballSkill)
+            {
+                if (GameManager.musicSettings){launchFireball.Play();}
 
-	            GameObject fireballClone;
-	            fireballClone = Instantiate(GameObject.FindGameObjectWithTag("Fireball"), transform.position, transform.rotation);
-	            fireballClone.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
-	            Vector2 vector2 = Vector2.right * 200f;
-	            if (fireballDirection == "left") vector2 = Vector2.left * 200f;
-	            fireballClone.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 250f);
-	            fireballClone.GetComponent<Rigidbody2D>().AddForce(vector2);
-	        }
-	    }
+                GameObject fireballClone;
+                fireballClone = Instantiate(GameObject.FindGameObjectWithTag("Fireball"), transform.position, transform.rotation);
+                fireballClone.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+                Vector2 vector2 = Vector2.right * 200f;
+                if (fireballDirection == "left") vector2 = Vector2.left * 200f;
+                fireballClone.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 250f);
+                fireballClone.GetComponent<Rigidbody2D>().AddForce(vector2);
+            }
+        }
 
-        // reinicia el nivel si se cae por un barranco o al agua
-//        if (gameObject.transform.position.y < - 7)
-//        {
-//            GameManager.currentNumberHearth--;
-//            if(GameManager.currentNumberHearth != 0) {
-//                myTransform.position = _lastGroundedPosition;
-//            }
-//        }
-
-	    // check si está dentro de la puerta con la llave y pulsa la tecla arriba
-	    if (GameManager.keyRedFound && Input.GetAxis("Vertical") > 0 && atTheDoor)
-	    {
+        // check si está dentro de la puerta con la llave y pulsa la tecla arriba
+        if (GameManager.keyRedFound && Input.GetAxis("Vertical") > 0 && atTheDoor)
+        {
             DoorFinishLevel();
-	    }
+        }
 
-	    // cambia de color al estar dañado y es inmune
-	    if (_damaged)
-	    {
-	        if (!_coroutineColorCalled)
-	        {
+        // cambia de color al estar dañado y es inmune
+        if (_damaged)
+        {
+            if (!_coroutineColorCalled)
+            {
                 StartCoroutine("color");
-	        }
+            }
 
-	        if (Waited(3)) {
-	            _damaged = false;
-	            _timer = 0;
-	        }
-	    }
-//	    else
-//	    {
-//	        mySpriteRenderer.material.SetColor("_Color", Color.white);
-//	    }
-
-	    // espera 3 segundos para dejar de estar dañado
-//	    if (_damaged) {
-//	        if(Waited(3)) {
-//	            _damaged = false;
-//	            _timer = 0;
-//	        }
-//	    }
-	}
+            if (Waited(3)) {
+                _damaged = false;
+                _timer = 0;
+            }
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
@@ -206,7 +187,19 @@ public class Character : MonoBehaviour
         // reinicia el nivel si se cae por un barranco o al agua
         if (collider.tag == "Void")
         {
-            GameManager.currentNumberHearth--;
+            if (!_damaged)
+            {
+                if (GameManager.musicSettings) characterDamaged.Play();
+                _damaged = true;
+                if (GameManager.fireballSkill)
+                {
+                    GameManager.fireballSkill = false;
+                }
+                else
+                {
+                    GameManager.currentNumberHearth--;
+                }
+            }
             if(GameManager.currentNumberHearth != 0) {
                 myTransform.position = _lastGroundedPosition;
             }
