@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class EnemySlime : MonoBehaviour
 {
-//    public float time;
-//    public float distanceX = 1;
-
     public float speed;
     public LayerMask groundMask;
     public LayerMask objectGroundMask;
@@ -18,9 +15,6 @@ public class EnemySlime : MonoBehaviour
     private Rigidbody2D myBody;
 
     private AudioSource enemyDestroyed;
-    // private AudioSource characterDamaged;
-
-//    public float directionX = 0;
 
     void Start()
     {
@@ -38,7 +32,6 @@ public class EnemySlime : MonoBehaviour
 
     void Update()
     {
-
         Vector2 lineCastPosition = myTransform.position - myTransform.right * myWidth + Vector3.up * myHeight;
         // dibuja una linea para saber si esta en el suelo
         Debug.DrawLine(lineCastPosition, lineCastPosition + Vector2.down);
@@ -59,41 +52,6 @@ public class EnemySlime : MonoBehaviour
         Vector2 myVelocity = myBody.velocity;
         myVelocity.x = - myTransform.right.x * speed;
         myBody.velocity = myVelocity;
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // character kills the enemy
-//        if (collision.gameObject.tag == "Shoes")
-//        {
-//            // collision.gameObject.myBody.AddForce(Vector2.up * 100f);
-//
-//            if (GameManager.musicSettings){
-//                enemyDestroyed.Play();
-//            }
-//
-//            gameObject.GetComponent<Collider2D>().enabled = false;
-//            myAnimator.SetBool("Dead", true);
-//            Destroy(gameObject, 1.5f);
-//        }
-
-        // enemy damages character
-        // if (collision.gameObject.tag == "Character"
-        //     && Math.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) >= 0.3)
-        // {
-        //     if (gameObject.transform.position.x > collision.gameObject.transform.position.x)
-        //     {
-        //         collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.left * 50f);
-        //     }
-        //     else
-        //     {
-        //         collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.right * 50f);
-        //     }
-
-        //     if (GameManager.musicSettings)
-        //         characterDamaged.Play();
-        //     GameManager.currentNumberHearth--;
-        // }
     }
 
     private void OnTriggerEnter2D(Collider2D collider){
